@@ -1,0 +1,84 @@
+#
+import os
+import random
+
+
+class Player(object):
+
+    def __init__(self, name, health=10, att=2, end=10):
+        self.name = name
+        self.health = health +random.randrange(2)-random.randrange(2)
+        self.att = att
+        self.end = end
+        self.moveList = []
+
+    def stat_disp(self):
+        print '\nName:'+self.name+'\nHealth:'+str(self.health)+'\nAttack:'+str(self.att)+'\nEndurance:'+str(self.end)
+
+    def mlist_disp(self):
+        for item in self.moveList:
+            item.move_disp()
+
+    def full_disp(self):
+        self.stat_disp()
+        self.mlist_disp()
+
+
+class Move(object):
+    def __init__(self, name, dmg=10, cost=2):
+        self.name = name
+        self.dmg = dmg
+        self.cost = cost
+        self.desc = []
+
+    def move_disp(self):
+        print '\nMove Name:'+self.name+'\nDMG:'+str(self.dmg)+'\nEndurance Cost:'+str(self.cost)
+
+    def flavor_text(self,player1, player2,dmg=1):
+        return player1.name +' jabs '+player2.name+' for '+str(dmg)+' damage!'
+
+
+#match manager funtion
+def m_manager(player1, player2):
+    for i in range(0,3,1):
+        print player1.name + ' attacks'
+        for n,move in enumerate(player1.moveList):
+            print str(n)+' '+move.name
+        choice = raw_input('Choose an attack:')
+        
+        if player1.end >= player1.moveList[int(choice)].cost and int(choice)+1 < len(player1.moveList):
+            player1.end = player1.end - player1.moveList[int(choice)].cost
+            player2.health = player2.health - player1.moveList[int(choice)].dmg
+        #print player1.moveList[0].flavor_text(player1, player2,3)
+        print '\n\n\n'
+        
+        print player2.name + ' attacks'
+        for n,move in enumerate(player2.moveList):
+            print str(n)+' '+move.name
+        raw_input('Choose an attack:')
+        print player2.moveList[0].flavor_text(player2, player1,3)
+        print '\n\n\n'
+
+Jab = Move('Jab',1,1)
+Cross = Move('Cross',2,1)
+Hook = Move('Hook',2,2)
+Uppercut = Move('Uppercut',3,3)
+
+
+Player1 = Player('dude')
+Player2 = Player('guy')
+
+Player1.moveList.append(Jab)
+Player1.moveList.append(Cross)
+Player2.moveList.append(Jab)
+Player2.moveList.append(Uppercut)
+
+Player1.full_disp()
+raw_input('')
+
+Player2.full_disp()
+raw_input('')
+
+m_manager(Player1, Player2)
+
+
